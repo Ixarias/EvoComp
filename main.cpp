@@ -22,7 +22,7 @@ string create_chrom(){
   return chrom;
 }
 
-Class Valuable {
+class Valuable {
 public:
   int value;
   int weight;
@@ -43,7 +43,7 @@ public:
   }
 }
 
-Class Knapsack {
+class Knapsack {
 public:
   int capacity;
   int total_fit;
@@ -76,11 +76,7 @@ int main()
   for(int i = 0; i < NUM_OBJECTS; i++) {
     int rnum = randnum_in_range(1, 20);
     int rnum2 = randnum_in_range(1, 20);
-<<<<<<< HEAD
     Valuable val = Valuable(rnum, rnum2);
-=======
-    Valuable val = Valuable(rnum, rnum2)
->>>>>>> d9a2136d2b4dcaaf78c3fbc50e93bc677694f507
     valuables[i] = val;
   }
 
