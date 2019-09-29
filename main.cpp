@@ -1,4 +1,5 @@
 
+#include<vector>
 #include<iostream>
 #include "somefunc.cpp"
 using namespace std;
@@ -27,40 +28,50 @@ public:
   int value;
   int weight;
 
-  int Valuable::Valuable(int v, int w) {
-    int value = v;
-    int weight = w;
+  Valuable(int v, int w) {
+    value = v;
+    weight = w;
   }
 
-  int Valuable::getValue() {
+  void construct(int v, int w) {
+    value = v;
+    weight = w;
+  }
+
+  int getValue() {
     return value;
   }
-  int Valuable::getWeight() {
+  int getWeight() {
     return weight;
   }
-  int Valuable::getRatio() {
+  int getRatio() {
     return weight/value;
   }
-}
+};
 
 class Knapsack {
 public:
-  int capacity;
+  int capacity = 0;
   int total_fit;
-  Valuable contents[];
+  vector<Valuable> contents;
 
-  int Knapsack::Knapsack(int c) {
-    int capacity = c;
+  Knapsack(int c) {
+    capacity = c;
   }
 
-  int Knapsack::getFit() {
+  void construct(int c) {
+    capacity = c;
+  }
+
+  int getFit() {
     int total_fit = 0;
-    for(int i = 0; i < contents.size(); i++) {
+    int size = contents.size();
+    for(int i = 0; i < size; i++) {
       total_fit += contents[i].getValue();
     }
     return total_fit;
   }
-}
+};
 
 int main()
 {
@@ -68,8 +79,7 @@ int main()
   vector<Knapsack> knapsacks;
   for(int i = 0; i < NUM_KNAPSACKS; i++) {
     int rnum = randnum_in_range(20, 100);
-    Knapsack knap = knapsack(rnum);
-    knapsacks[i] = knap;
+    knapsacks[i].construct(rnum);
   }
   // generate NUM_OBJECTS (20) objects
   vector<Valuable> valuables;
@@ -83,7 +93,7 @@ int main()
   // generate POP_SIZE (10) chromosomes
   vector<string> chromosomes;
   for(int i = 0; i < POP_SIZE; i++) {
-    chrom = create_chrom();
+    string chrom = create_chrom();
     chromosomes[i] = chrom;
   }
 }
