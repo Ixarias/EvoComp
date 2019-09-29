@@ -4,7 +4,7 @@
 using namespace std;
 
 #define NUM_KNAPSACKS 2
-#define POP_SIZE 100
+#define POP_SIZE 10
 #define NUM_OBJECTS 20
 
 int randnum_in_range(int start, int end){
@@ -13,7 +13,7 @@ int randnum_in_range(int start, int end){
   return random_int;
 }
 
-string create_chrome(){
+string create_chrom(){
   int total = NUM_OBJECTS;
   string chrom = "";
   for(int i = 0; i < total; i++){
@@ -60,20 +60,30 @@ public:
     }
     return total_fit;
   }
-
-
-
 }
 
 int main()
 {
   // generate NUM_KNAPSACKS knapsacks
+  vector<Knapsack> knapsacks;
   for(int i = 0; i < NUM_KNAPSACKS; i++) {
-
+    int rnum = randnum_in_range(20, 100);
+    Knapsack knap = knapsack(rnum);
+    knapsacks[i] = knap;
   }
-  // generate POP_SIZE (100) objects
+  // generate NUM_OBJECTS (20) objects
+  vector<Valuable> valuables;
+  for(int i = 0; i < NUM_OBJECTS; i++) {
+    int rnum = randnum_in_range(1, 20);
+    int rnum2 = randnum_in_range(1, 20);
+    Valuable val = Valuable(rnum, rnum2);
+    valuables[i] = val;
+  }
+
+  // generate POP_SIZE (10) chromosomes
+  vector<string> chromosomes;
   for(int i = 0; i < POP_SIZE; i++) {
-
+    chrom = create_chrom();
+    chromosomes[i] = chrom;
   }
-
 }
