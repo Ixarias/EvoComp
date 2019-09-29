@@ -132,40 +132,43 @@ int test_chrom(string chr, vector<Knapsack> kn, vector<Valuable> va) {
   }
 }
 
-void Crossover(string &offspring1, string &offspring2)
-{
+void Mutate(string &bits) {
+  for (unsigned int i = 0; i < bits.length(); i++) {
+    if ((unsigned int)(randnum_in_range(0, 100)/100) < bits.length()) {
+      if (bits.at(i) == '1') {
+        bits.at(i) = '0';
+      }
+      else {
+        bits.at(i) = '1';
+      }
+    }
+  }
+  return;
+}
+
+void Crossover(string &offspring1, string &offspring2) {
   //create a random crossover point
   int len = offspring1.length();
   int crossover = randnum_in_range(0, len);
 
   string t1 = offspring1.substr(0, crossover) + offspring2.substr(crossover, 1/len);
   string t2 = offspring2.substr(0, crossover) + offspring1.substr(crossover, 1/len);
-
+  Mutate(t1);
+  Mutate(t2);
   offspring1 = t1; offspring2 = t2;
 }
 
-void Mutate(string &bits)
-{
-  for (unsigned int i = 0; i < bits.length(); i++)
-  {
-    if ((unsigned int)(randnum_in_range(0, 100)/100) < bits.length())
-    {
-      if (bits.at(i) == '1')
-      {
-        bits.at(i) = '0';
-      }
-      else
-      {
-        bits.at(i) = '1';
-      }
-    }
+int twotourney(int pos1, int pos2, vector<int> fit_vec) {
+  int winnerval = max(fit_vec[pos1], fit_vec[pos2]);
+  if(winnerval == fit_vec[pos1]) {
+    return pos1;
   }
-
-  return;
+  else {
+    return pos2;
+  }
 }
 
-int main()
-{
+int main() {
   // random seed for rnum
   srand (time(nullptr));
 
@@ -173,18 +176,12 @@ int main()
   int current_best = 0;
   int stalemate = 0;
   vector<int> fit_vec_now;
+  vector<int> fit_vec_next;
+  vector<Knapsack> knapsacks_vector;
+  vector<Valuable> valuables_vector;
+  vector<string> now_gen;
 
   // [1] enter NUM_KNAPSACKS knapsacks
-  /* cout << "Enter number of knapsacks :";
-  cin >> num_knap;
-  for (int i = 0; i < num_knap; i++) {
-    cout << "Enter capacity for knapsack " << i << ": ";
-    int knap_cap = 0;
-    cin >> knap_cap;
-    knapsacks_vector.push_back(Knapsack(knap_cap));
-  } */
-
-  vector<Knapsack> knapsacks_vector;
   ifstream infile;
   infile.open("Knapsacks.txt", ifstream::in);
   string line;
@@ -194,29 +191,26 @@ int main()
   }
   infile.close();
 
-  /* for(int i = 0; i < NUM_KNAPSACKS; i++) {
-    int rnum = randnum_in_range(20, 100);
-    Knapsack knapinter = Knapsack(rnum);
-    knapsacks_vector.push_back(knapinter);
-    cout << i << ": "; knapsacks_vector[i].display(); } */
-
   // enter NUM_OBJECTS objects
-  vector<Valuable> valuables_vector;
   infile.open("Valuables.txt", ifstream::in);
-  while(getline(infile, line)) {
-    int val = stoi(line);
-    int wei = stoi(line);
-    valuables_vector.push_back(Valuable(val, wei));
+  int filei = 0;
+  string word;
+  int vec_val;
+  int vec_wei;
+  while(infile >> word) {
+    if(filei == 0) {
+      vec_val = stoi(word);
+      filei = 1;
+    }
+    else {
+      vec_wei = stoi(word);
+      filei = 0;
+      valuables_vector.push_back(Valuable(vec_val, vec_wei));
+    }
   }
   infile.close();
 
-  /* for(int i = 0; i < NUM_OBJECTS; i++) {
-    Valuable valinter = Valuable(randnum_in_range(1, 20), randnum_in_range(1, 20));
-    valuables_vector.push_back(valinter);
-    cout << i << ": "; valuables_vector[i].display(); } */
-
-  // [2] generate POP_SIZE now_gen
-  vector<string> now_gen;
+  // [2] generate POP_SIZE chromosomes
   for(int i = 0; i < 10; i++) {
     string chrom = create_chrom(valuables_vector.size());
     now_gen.push_back(chrom);
@@ -238,13 +232,36 @@ int main()
   }
 
   // [4] start evolutionary loop
+
   while(stalemate != 25){
+    current_best = 0;
     vector<string> next_gen;
     // [a] create new population
     // crossover
-
-
-
+    while(next_gen.size() < now_gen.size()) {
+      int len = now_gen[0].length();
+      string buffer1 = now_gen[twotourney(randnum_in_range(0, len), randnum_in_range(0, len), fit_vec_now)];
+      string buffer2 = now_gen[twotourney(randnum_in_range(0, len), randnum_in_range(0, len), fit_vec_now)];
+      Crossover(buffer1, buffer2);
+      int success1 = test_chrom(buffer1, knapsacks_vector, valuables_vector);
+      while(success1 == -1) {
+        fix_chrom(buffer1);
+        success1 = test_chrom(buffer1, knapsacks_vector, valuables_vector);
+      }
+      int success2 = test_chrom(buffer2, knapsacks_vector, valuables_vector);
+      while(success2 == -1) {
+        fix_chrom(buffer1);
+        success2 = test_chrom(buffer2, knapsacks_vector, valuables_vector);
+      }
+      if(current_best < success1) {
+        current_best = success1;
+      }
+      if(current_best < success2) {
+        current_best = success2;
+      }
+      next_gen.push_back(buffer1);
+      next_gen.push_back(buffer2);
+    }
     // prep for next generation
     if(current_best < best_fit || current_best == best_fit) {
       stalemate += 1;
@@ -253,9 +270,13 @@ int main()
       best_fit = current_best;
       stalemate = 0;
     }
+    cout << best_fit << endl;
+    now_gen = next_gen;
     next_gen.clear();
   }
 
-  // [4] exit when fitness has not improved for 25 generations
+  // [5] exit when fitness has not improved for 25 generations
+
+
 
 }
