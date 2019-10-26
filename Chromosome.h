@@ -1,5 +1,5 @@
-#ifndef CHROMOSOME_H
-#define CHROMOSOME_H
+#ifndef INCLUDE
+#define INCLUDE
 
 #include<vector>
 #include<string>
@@ -8,17 +8,27 @@
 #include<time.h>
 #include<iostream>
 #include<fstream>
+
+#endif
+
+#ifndef CHROMOSOME_H
+#define CHROMOSOME_H
+
 using namespace std;
 
 class Chromosome {
 private:
-  string chr;
-  int fit;
+	string chr;
+	int fit;
 public:
-  Chromosome();
-  string generateChr(), getChr();
-  int evaluateFit(), getFit();
-  void Mutate(), Crossover(), fixChr();
+	Chromosome(vector< vector<int> >, vector< vector<int> >);
+	string generateChr(vector< vector<int> >),
+		getChr();
+	int evaluateFit(vector< vector<int> >, vector< vector<int> >),
+		getFit(),
+		randnum_with_excep(int, int, vector<int>);
+	void Mutate(),
+		Crossover();
 };
 
 #endif
