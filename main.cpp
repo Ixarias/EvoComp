@@ -8,69 +8,144 @@
 #include<time.h>
 #include<iostream>
 #include<fstream>
+#include<cmath>
 
 #endif
 
+#include "Chromosome.h"
 using namespace std;
 
-#include "Chromosome.h"
+#define POP_SIZE 200
 
-#define POP_SIZE 10
+vector<Chromosome> SortChr(vector<Chromosome> chromosomes) {
+	std::sort(chromosomes.begin(), chromosomes.end());
+	return chromosomes;
+}
+
+int randnum(int start, int end, vector<int> excep = vector<int>()) {
+	int range = (end - start);
+	int random_int = start + (rand() % range);
+	if (std::find(excep.begin(), excep.end(), random_int) != excep.end()) {
+		random_int = randnum(start, end, excep);
+	}
+	return random_int;
+}
 
 int main() {
 	// Seed
 	srand(time(nullptr));
 
 	// Variables
-	vector< vector<int> > MachineSequences;
-	vector< vector<int> > ProcessingTime;
+	vector< vector<int> > MS;
+	vector< vector<int> > PT;
 	vector<Chromosome> chromosomes;
+	vector<Chromosome> chromosomes_next;
+	int bestfit = 99999;
+	int stalemate = 0;
+	int gennum = 0;
 
-	ifstream infile;
-	ifstream infile2;
+	std::fstream infile("MachineSequences.txt", ios_base::in);
+	std::fstream infile2("ProcessingTime.txt", ios_base::in);
 
 	// Input File #1
-	infile.open("MachineSequences.txt", ifstream::in);
 	if (infile.is_open()) {
-		cout << "MachineSequences.txt is open" << endl;
-	}
-	string line;
-	int i = 0;
-	while (getline(infile, line)) {
-		for (unsigned int j = 0; j < line.length(); j++) {
-			MachineSequences[i][j] = (int)line[j];
+		string line;
+		vector<int> TempVec;
+		while (std::getline(infile, line)) {
+			TempVec.clear();
+			for (unsigned int i = 0; i < line.length(); i++) {
+				TempVec.push_back(line[i] - '0');
+			}
+			MS.push_back(TempVec);
 		}
-		cout << "MachineSequences.txt line" << endl;
-		i++;
-	}
-	infile.close();
-	if (!infile.is_open()) {
-		cout << "MachineSequences.txt is closed" << endl;
+		infile.close();
 	}
 
 	// Input File #2
-	infile2.open("ProcessingTime.txt", ifstream::in);
 	if (infile2.is_open()) {
-		cout << "ProcessingTime.txt is open" << endl;
-	}
-  i = 0;
-	while (getline(infile2, line)) {
-		for (unsigned int j = 0; j < line.length(); j++) {
-			ProcessingTime[i][j] = (int)line[j];
+		string line;
+		vector<int> TempVec;
+		while (std::getline(infile2, line)) {
+			TempVec.clear();
+			for (unsigned int i = 0; i < line.length(); i += 2) {
+				string s1 = to_string(line[i] - '0');
+				string s2 = to_string(line[i + 1] - '0');
+				int c;
+				if (s1 == "0") {
+					c = stoi(s2);
+				}
+				else {
+					string both = s1 + s2;
+					c = stoi(both);
+				}
+				TempVec.push_back(c);
+			}
+			PT.push_back(TempVec);
 		}
-		cout << "ProcessingTime.txt line" << endl;
-		i++;
-	}
-	infile2.close();
-	if (!infile2.is_open()) {
-		cout << "ProcessingTime.txt is closed" << endl;
+		infile2.close();
 	}
 
-	for (i = 0; i < POP_SIZE; i++) {
-		Chromosome chr(MachineSequences, ProcessingTime);
+	// Start New Population
+
+	for (unsigned int i = 0; i < POP_SIZE; i++) {
+		Chromosome chr(MS, PT);
 		chromosomes.push_back(chr);
-		cout << chr.getChr() << endl;
 	}
+	chromosomes = SortChr(chromosomes);
+
+	// Loop Population until Completion
+	
+	while (stalemate != 50) {
+		gennum++;
+		// Elitism
+		for (unsigned int i = 0; i < (POP_SIZE * .05); i++) {
+			chromosomes_next.push_back(chromosomes[i]);
+		}
+		// Crossover
+		for (unsigned int i = 0; i < (POP_SIZE * .95); i++) {
+			vector<Chromosome> temppopulation = chromosomes;
+			int rnum = randnum(0, POP_SIZE, { -1 });
+			Chromosome Chromosome1 = temppopulation[rnum];
+			temppopulation.erase(temppopulation.begin() + rnum);
+			rnum = randnum(0, POP_SIZE - 1, { -1 });
+			Chromosome Chromosome2 = temppopulation[rnum];
+			temppopulation.erase(temppopulation.begin() + rnum);
+			rnum = randnum(0, POP_SIZE - 2, { -1 });
+			Chromosome Chromosome3 = temppopulation[rnum];
+			temppopulation.erase(temppopulation.begin() + rnum);
+			rnum = randnum(0, POP_SIZE - 3, { -1 });
+			Chromosome Chromosome4 = temppopulation[rnum];
+			temppopulation.erase(temppopulation.begin() + rnum);
+			if (Chromosome3 < Chromosome1) {
+				Chromosome1 = Chromosome3;
+			}
+			if (Chromosome4 < Chromosome2) {
+				Chromosome2 = Chromosome4;
+			}
+			Chromosome3 = Chromosome1.Crossover(Chromosome2, MS, PT);
+			// Chance for Mutation
+			if (randnum(0, POP_SIZE, { -1 }) < (POP_SIZE * .4)) {
+				Chromosome3 = (Chromosome3.Mutate(MS, PT));
+			}
+			chromosomes_next.push_back(Chromosome3);
+		}
+		// Make next population current population and sort
+		chromosomes = chromosomes_next;
+		chromosomes = SortChr(chromosomes);
+		// Compare best fit
+		if (chromosomes[0].getFit() < bestfit) {
+			bestfit = chromosomes[0].getFit();
+			stalemate = 0;
+		}
+		else
+		{
+			stalemate++;
+		}
+		// cout << "Generation " << gennum << " best: " << chromosomes[0].getChr() << " - " << chromosomes[0].getFit() << " | " << bestfit << endl;
+	}
+
+	// Output results
+	cout << bestfit << endl;
 
 	return 0;
 }

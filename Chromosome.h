@@ -8,6 +8,7 @@
 #include<time.h>
 #include<iostream>
 #include<fstream>
+#include<cmath>
 
 #endif
 
@@ -18,17 +19,20 @@ using namespace std;
 
 class Chromosome {
 private:
-	string chr;
+	string chr, ind;
 	int fit;
 public:
 	Chromosome(vector< vector<int> >, vector< vector<int> >);
+	Chromosome(string, string, vector< vector<int> >, vector< vector<int> >);
 	string generateChr(vector< vector<int> >),
-		getChr();
+		getChr(),
+		getIndex();
+	Chromosome Crossover(Chromosome, vector< vector<int> >, vector< vector<int> >),
+		Mutate(vector< vector<int> >, vector< vector<int> >);
 	int evaluateFit(vector< vector<int> >, vector< vector<int> >),
 		getFit(),
-		randnum_with_excep(int, int, vector<int>);
-	void Mutate(),
-		Crossover();
+		randnum(int, int, vector<int>);
+	bool operator< (Chromosome);
 };
 
 #endif
