@@ -44,26 +44,26 @@ string Chromosome::getChr() {
 }
 
 int Chromosome::evaluateFit(vector< vector<int> > MS, vector< vector<int> > PT) {
-	vector<int> Tnext, Jstart, Mstart;
+	vector<int> machSeqNext, taskStart, procStart;
 	int start = 0;
 	for (unsigned int i = 0; i < MS.size(); i++) {
-		Tnext.push_back(0);
-		Jstart.push_back(0);
+		machSeqNext.push_back(0);
+		taskStart.push_back(0);
 	}
 	for (unsigned int i = 0; i < PT[0].size(); i++) {
-		Mstart.push_back(0);
+		procStart.push_back(0);
 	}
 	for(unsigned k = 0; k < chr.length(); k++) {
 		int i = chr[k] - '0';
-		int j = MS[i][Tnext[i]];
-		Tnext[i] += 1;
-		start = max(Jstart[i], Mstart[j]);
-		Jstart[i] = start + PT[i][j];
-		Mstart[j] = start + PT[i][j];
+		int j = MS[i][machSeqNext[i]];
+		machSeqNext[i] += 1;
+		start = max(taskStart[i], procStart[j]);
+		taskStart[i] = start + PT[i][j];
+		procStart[j] = start + PT[i][j];
 	}
 	int fitness = 0;
-	for(unsigned int i = 0; i < Mstart.size(); i++) {
-		fitness = max(fitness, Mstart[i]);
+	for(unsigned int i = 0; i < procStart.size(); i++) {
+		fitness = max(fitness, procStart[i]);
 	}
 	return fitness;
 }
