@@ -40,7 +40,21 @@ int Chromosome::getFit() {
 
 Chromosome Chromosome::Mutate(vector< vector<int> > edgeLength, vector<int> clusterSizes) {
 	Chromosome newchr(edgeLength, clusterSizes);
-	return newchr;
+	vector<int> chromo = chr;
+		int prevend = 0;
+	for (unsigned int i = 0; i < clusterSizes.size(); i++) {
+		int start = 0 + prevend;
+		int end = start + clusterSizes[i];
+		if (randnum(1, clusterSizes.size() + 1) == clusterSizes.size()) {
+`			while (chromo.at(i) == chr.at(i)) {
+				int node = randnum(start, end);
+				chromo.at(i) = node;
+			}
+		}
+		prevend = end;
+	}
+
+	return chromo;
 }
 
 Chromosome Chromosome::Crossover(Chromosome otherchr, vector< vector<int> > edgeLength, vector<int> clusterSizes) {
