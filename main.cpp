@@ -12,15 +12,15 @@
 
 #endif
 
-#include "Chromosome.h"
+#include "Chromosome.cpp"
 using namespace std;
 
-#define POP_SIZE 200
+#define POP_SIZE 10 //change later dickhead
 
-vector<Chromosome> SortChr(vector<Chromosome> chromosomes) {
+/*vector<Chromosome> SortChr(vector<Chromosome> chromosomes) {
 	std::sort(chromosomes.begin(), chromosomes.end());
 	return chromosomes;
-}
+}*/
 
 int randnum(int start, int end, vector<int> excep = { -1 }) {
 	int range = (end - start);
@@ -36,16 +36,16 @@ int main() {
 	srand(time(nullptr));
 
 	// Variables
-	vector< vector<int> > MS;
-	vector< vector<int> > PT;
+	vector< vector<int> > edgeLength;
+	vector<int> clusterSizes;
 	vector<Chromosome> chromosomes;
 	vector<Chromosome> chromosomes_next;
-	int bestfit = 99999;
+	/*int bestfit = 99999;
 	int stalemate = 0;
-	int gennum = 0;
+	int gennum = 0;*/
 
-	std::fstream infile("MachineSequences.txt", ios_base::in);
-	std::fstream infile2("ProcessingTime.txt", ios_base::in);
+	std::fstream infile("edgelengths.txt", ios_base::in);
+	std::fstream infile2("clustersizes.txt", ios_base::in);
 
 	// Input File #1
 	if (infile.is_open()) {
@@ -56,7 +56,7 @@ int main() {
 			for (unsigned int i = 0; i < line.length(); i++) {
 				TempVec.push_back(line[i] - '0');
 			}
-			MS.push_back(TempVec);
+			edgeLength.push_back(TempVec);
 		}
 		infile.close();
 	}
@@ -64,34 +64,26 @@ int main() {
 	// Input File #2
 	if (infile2.is_open()) {
 		string line;
-		vector<int> TempVec;
-		while (std::getline(infile2, line)) {
-			TempVec.clear();
-			for (unsigned int i = 0; i < line.length(); i += 2) {
-				string s1 = to_string(line[i] - '0');
-				string s2 = to_string(line[i + 1] - '0');
-				int c;
-				if (s1 == "0") {
-					c = stoi(s2);
-				}
-				else {
-					string both = s1 + s2;
-					c = stoi(both);
-				}
-				TempVec.push_back(c);
-			}
-			PT.push_back(TempVec);
+		getline(infile2, line);
+		for (unsigned int i = 0; i < line.length(); i++) {
+			clusterSizes.push_back(line[i] - '0');
 		}
-		infile2.close();
+		infile.close();
 	}
 
 	// Start New Population
 
 	for (unsigned int i = 0; i < POP_SIZE; i++) {
-		Chromosome chr(MS, PT);
+		Chromosome chr(edgeLength, clusterSizes);
+		cout << "Chromosome" << i << ":";
+		for (auto const& c : chr.getChr())
+    	cout << ' ' << c;
 		chromosomes.push_back(chr);
+		cout << endl;
 	}
-	chromosomes = SortChr(chromosomes);
+	// chromosomes = SortChr(chromosomes);
+
+/*
 
 	// Loop Population until Completion
 
@@ -122,10 +114,10 @@ int main() {
 			if (Chromosome4 < Chromosome2) {
 				Chromosome2 = Chromosome4;
 			}
-			Chromosome3 = Chromosome1.Crossover(Chromosome2, MS, PT);
+			Chromosome3 = Chromosome1.Crossover(Chromosome2, edgeLength);
 			// Chance for Mutation
 			if (randnum(0, POP_SIZE) < (POP_SIZE * .4)) {
-				Chromosome3 = (Chromosome3.Mutate(MS, PT));
+				Chromosome3 = (Chromosome3.Mutate(edgeLength));
 			}
 			chromosomes_next.push_back(Chromosome3);
 		}
@@ -146,6 +138,8 @@ int main() {
 
 	// Output results
 	cout << bestfit << endl;
+
+*/
 
 	return 0;
 }
