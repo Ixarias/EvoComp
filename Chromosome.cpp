@@ -38,46 +38,45 @@ int Chromosome::getFit() {
 	return fit;
 }
 
-Chromosome Chromosome::Mutate(vector< vector<int> > edgeLength, vector<int> clusterSizes) {
+void Chromosome::Mutate(vector< vector<int> > edgeLength, vector<int> clusterSizes) {
 	Chromosome newchr(edgeLength, clusterSizes);
-	vector<int> chromo = chr;
 		int prevend = 0;
 	for (unsigned int i = 0; i < clusterSizes.size(); i++) {
 		int start = 0 + prevend;
 		int end = start + clusterSizes[i];
 		if (randnum(1, clusterSizes.size() + 1) == clusterSizes.size()) {
-`			while (chromo.at(i) == chr.at(i)) {
+			int avoid = chr.at(i);
+			while (chr.at(i) == avoid) {
 				int node = randnum(start, end);
-				chromo.at(i) = node;
+				chr.at(i) = node;
 			}
 		}
 		prevend = end;
 	}
-
-	return chromo;
 }
 
 void Chromosome::Crossover(Chromosome& otherchr, vector< vector<int> > edgeLength, vector<int> clusterSizes) {
 	vector<int> chrc = chr;
 	vector<int> otherchrc = otherchr.getChr();
-	int start = randnum(0, chr.size());
-	int end = randnum(0, chr.size());
+	int start = randnum(0, chr.size()) + 1;
+	int end = randnum(0, chr.size()) + 1;
 	while (end == start) {
-		end = randnum(0, chr.size());
+		end = randnum(0, chr.size()) + 1;
 	}
 	if (start > end) {
 		int temp = end;
 		end = start;
 		start = temp;
 	}
-	for(int i = 0; i < chr.size(); i++) {
-		if(start < i && i < end) {
+	cout << "start: " << start << "end: " << end << endl;
+	for(int i = 1; i < chr.size(); i++) {
+		if(start <= i && i <= end) {
 			chr.at(i) = otherchrc.at(i);
 		}
 	}
-	for(int i = 0; i < chr.size(); i++) {
-		if(start < i && i < end) {
-			otherchr.getChr().at(i) = chrc.at(i);
+	for(int i = 1; i < chr.size(); i++) {
+		if(start <= i && i <= end) {
+			otherchr.chr.at(i) = chrc.at(i);
 		}
 	}
 }

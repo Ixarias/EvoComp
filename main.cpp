@@ -83,6 +83,34 @@ int main() {
 	}
 	// chromosomes = SortChr(chromosomes);
 
+	cout << "Before:";
+	for (auto const& c : chromosomes[6].getChr())
+		cout << ' ' << c;
+	cout << endl;
+	chromosomes[6].Mutate(edgeLength, clusterSizes);
+	cout << "After:";
+	for (auto const& c : chromosomes[6].getChr())
+		cout << ' ' << c;
+	cout << endl;
+
+	cout << "Before - 9:";
+	for (auto const& c : chromosomes[9].getChr())
+		cout << ' ' << c;
+	cout << endl;
+	cout << "Before - 3:";
+	for (auto const& c : chromosomes[3].getChr())
+		cout << ' ' << c;
+	cout << endl;
+	chromosomes[9].Crossover(chromosomes[3], edgeLength, clusterSizes);
+	cout << "After - 9:";
+	for (auto const& c : chromosomes[9].getChr())
+		cout << ' ' << c;
+	cout << endl;
+	cout << "After - 3:";
+	for (auto const& c : chromosomes[3].getChr())
+		cout << ' ' << c;
+	cout << endl;
+
 /*
 
 	// Loop Population until Completion
