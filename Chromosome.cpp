@@ -43,9 +43,29 @@ Chromosome Chromosome::Mutate(vector< vector<int> > edgeLength, vector<int> clus
 	return newchr;
 }
 
-Chromosome Chromosome::Crossover(Chromosome otherchr, vector< vector<int> > edgeLength, vector<int> clusterSizes) {
-	Chromosome newchr(edgeLength, clusterSizes);
-	return newchr;
+void Chromosome::Crossover(Chromosome& otherchr, vector< vector<int> > edgeLength, vector<int> clusterSizes) {
+	vector<int> chrc = chr;
+	vector<int> otherchrc = otherchr.getChr();
+	int start = randnum(0, chr.size());
+	int end = randnum(0, chr.size());
+	while (end == start) {
+		end = randnum(0, chr.size());
+	}
+	if (start > end) {
+		int temp = end;
+		end = start;
+		start = temp;
+	}
+	for(int i = 0; i < chr.size(); i++) {
+		if(start < i && i < end) {
+			chr.at(i) = otherchrc.at(i);
+		}
+	}
+	for(int i = 0; i < chr.size(); i++) {
+		if(start < i && i < end) {
+			otherchr.getChr().at(i) = chrc.at(i);
+		}
+	}
 }
 
 bool Chromosome::operator<(Chromosome otherchr) {
