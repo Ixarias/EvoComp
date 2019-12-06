@@ -9,6 +9,8 @@
 #include<iostream>
 #include<fstream>
 #include<cmath>
+#include<sstream>
+#include<iterator>
 
 #endif
 

@@ -9,6 +9,8 @@
 #include<iostream>
 #include<fstream>
 #include<cmath>
+#include<sstream>
+#include<iterator>
 
 #endif
 
@@ -35,6 +37,9 @@ int main(int argc, char* argv[]) {
 	// Seed
 	srand(time(nullptr));
 
+	// all output in standard form
+	cout << fixed;
+
 	// Variables
 	vector< vector<float> > edgeLength;
 	vector<Point> nodes;
@@ -48,7 +53,7 @@ int main(int argc, char* argv[]) {
 	std::fstream infile(argv[1], ios_base::in);
 
 
-	// Input instancew
+	// Input instance
 	if (infile.is_open()) {
 		string line;
 		vector<string> vecstr{};
