@@ -87,7 +87,7 @@ int comp(const void* a, const void* b) {
 
 int KruskalMST(Graph* graph) {
     int v = graph->v;
-    Edge result[v];
+    Edge* result = new Edge[v];
     int e = 0,
         i = 0;
 

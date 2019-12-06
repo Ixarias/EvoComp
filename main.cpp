@@ -20,10 +20,10 @@ using namespace std;
 
 #define POP_SIZE 10 //change later dickhead
 
-/*vector<Chromosome> SortChr(vector<Chromosome> chromosomes) {
+vector<Chromosome> SortChr(vector<Chromosome> chromosomes) {
 	std::sort(chromosomes.begin(), chromosomes.end());
 	return chromosomes;
-}*/
+}
 
 int randnum(int start, int end, vector<int> excep = { -1 }) {
 	int range = (end - start);
@@ -34,7 +34,7 @@ int randnum(int start, int end, vector<int> excep = { -1 }) {
 	return random_int;
 }
 
-bool mycomp (Edge i, Edge j) {
+bool edgecomp (Edge i, Edge j) {
 	return i.weight < j.weight;
 }
 
@@ -52,9 +52,9 @@ int main(int argc, char* argv[]) {
 	vector< vector<int> > clusterList;
 	vector<Chromosome> chromosomes;
 	vector<Chromosome> chromosomes_next;
-	/*int bestfit = 99999;
+	int bestfit = 99999;
 	int stalemate = 0;
-	int gennum = 0;*/
+	int gennum = 0;
 
 	std::fstream infile(argv[1], ios_base::in);
 
@@ -90,18 +90,11 @@ int main(int argc, char* argv[]) {
 
 	for(int i = 1; i < numclusters; i++) {
 		Point candidate = nodetmp.back();
-		sort(candidate.edges.begin(), candidate.edges.end(), mycomp);
-		cout << "start " << i << endl;
-		/*for (int i = 0; i < candidate.edges.size(); i++) {
-			cout << candidate.edges[i].weight << endl;
-		}*/
+		sort(candidate.edges.begin(), candidate.edges.end(), edgecomp);
 		vector< vector<int> >::const_iterator row = clusterList.begin();
-		cout << "before" << endl;
 		for(int j = 0; j < clustersize; j++) {
 			do {
-				cout << "1" << endl;
         if(!(find(row->begin(), row->end(), candidate.edges[j].dest) != row->end() )) {
-					cout << "true" << endl;
           clusterList[i].push_back(candidate.edges[j].dest);
 					for(int k = 0; k < nodetmp.size(); k++) {
 						if (nodetmp[k].pos == candidate.edges[j].dest) {
@@ -110,14 +103,11 @@ int main(int argc, char* argv[]) {
 						}
 					}
 				}
-				cout << "here" << endl;
 				row++;
 			} while (row != clusterList.end());
-			cout << "out" << endl;
 		}
 	}
 	// last cluster
-	cout << "out" << endl;
 	clusterList.push_back({});
 	int remainder = nodes.size() % clustersize;
 	cout << remainder << endl;
@@ -125,20 +115,6 @@ int main(int argc, char* argv[]) {
 		clusterList[clusterList.size()-1].push_back(nodetmp[0].pos);
 		nodetmp.erase(nodetmp.begin());
 	}
-
-	/*cout << "input" << endl;
-	for (int i = 0; i < nodes.size(); i++) {
-		cout << nodes[i].pos << " " << nodes[i].x << " " << nodes[i].y << endl;
-	}*/
-	cout << "clusterList" << endl;
-	for (int i = 0; i < clusterList.size(); i++) {
-		cout << "cluster " << i << ":" << endl;
-		for (int j = 0; j < clusterList[i].size(); j++) {
-			cout << " " << clusterList[i][j];
-		}
-		cout << endl;
-	}
-
 
 	// Start New Population
 
@@ -151,38 +127,6 @@ int main(int argc, char* argv[]) {
 		chromosomes.push_back(chr);
 		cout << endl;
 	}
-	// chromosomes = SortChr(chromosomes);
-
-	cout << "3" << endl;
-	cout << "Before:";
-	for (auto const& c : chromosomes[6].getChr())
-		cout << ' ' << c;
-	cout << endl;
-	chromosomes[6].Mutate(clusterList);
-	cout << "After:";
-	for (auto const& c : chromosomes[6].getChr())
-		cout << ' ' << c;
-	cout << endl;
-
-	cout << "Before - 9:";
-	for (auto const& c : chromosomes[9].getChr())
-		cout << ' ' << c;
-	cout << endl;
-	cout << "Before - 3:";
-	for (auto const& c : chromosomes[3].getChr())
-		cout << ' ' << c;
-	cout << endl;
-	chromosomes[9].Crossover(chromosomes[3]);
-	cout << "After - 9:";
-	for (auto const& c : chromosomes[9].getChr())
-		cout << ' ' << c;
-	cout << endl;
-	cout << "After - 3:";
-	for (auto const& c : chromosomes[3].getChr())
-		cout << ' ' << c;
-	cout << endl;
-
-/*
 
 	// Loop Population until Completion
 
@@ -213,10 +157,10 @@ int main(int argc, char* argv[]) {
 			if (Chromosome4 < Chromosome2) {
 				Chromosome2 = Chromosome4;
 			}
-			Chromosome3 = Chromosome1.Crossover(Chromosome2, edgeLength);
+			Chromosome1.Crossover(Chromosome2);
 			// Chance for Mutation
 			if (randnum(0, POP_SIZE) < (POP_SIZE * .4)) {
-				Chromosome3 = (Chromosome3.Mutate(edgeLength));
+				(Chromosome1.Mutate(clusterList));
 			}
 			chromosomes_next.push_back(Chromosome3);
 		}
@@ -232,13 +176,10 @@ int main(int argc, char* argv[]) {
 		{
 			stalemate++;
 		}
-		// cout << "Generation " << gennum << " best: " << chromosomes[0].getChr() << " - " << chromosomes[0].getFit() << " | " << bestfit << endl;
 	}
 
 	// Output results
 	cout << bestfit << endl;
-
-*/
 
 	return 0;
 }
