@@ -43,6 +43,7 @@ int main(int argc, char* argv[]) {
 
 	// Variables
 	int clustersize = stoi(argv[2]);
+	cout << clustersize << endl;
 	vector<Point> nodes;
 	vector< vector<int> > clusterList;
 	vector<Chromosome> chromosomes;
@@ -56,6 +57,7 @@ int main(int argc, char* argv[]) {
 
 	// Input instance
 	if (infile.is_open()) {
+		cout << "open" << endl;
 		string line;
 		vector<string> vecstr{};
 		vector<float> vecfl{};
@@ -72,7 +74,7 @@ int main(int argc, char* argv[]) {
 		}
 		for(int i = 0; i < nodes.size(); i++) {
 			for (int j = 0; j < nodes.size(); j++) {
-				nodes[i].edges.push_back(Kruskal::Edge(i, j, distance(nodes[i].x, nodes[i].y, nodes[j].x, nodes[j].y)));
+				nodes[i].edges.push_back(Edge(i, j, distance(nodes[i].x, nodes[i].y, nodes[j].x, nodes[j].y)));
 			}
 		}
 		infile.close();
@@ -126,7 +128,7 @@ int main(int argc, char* argv[]) {
 	for (auto const& c : chromosomes[6].getChr())
 		cout << ' ' << c;
 	cout << endl;
-	chromosomes[6].Mutate(edgeLength, clusterList);
+	chromosomes[6].Mutate(clusterList);
 	cout << "After:";
 	for (auto const& c : chromosomes[6].getChr())
 		cout << ' ' << c;
@@ -140,7 +142,7 @@ int main(int argc, char* argv[]) {
 	for (auto const& c : chromosomes[3].getChr())
 		cout << ' ' << c;
 	cout << endl;
-	chromosomes[9].Crossover(chromosomes[3], edgeLength, clusterList);
+	chromosomes[9].Crossover(chromosomes[3]);
 	cout << "After - 9:";
 	for (auto const& c : chromosomes[9].getChr())
 		cout << ' ' << c;

@@ -1,7 +1,52 @@
-#include "Kruskal.h"
+#ifndef INCLUDE
+#define INCLUDE
+
+#include<vector>
+#include<string>
+#include<algorithm>
+#include<stdio.h>
+#include<stdlib.h>
+#include<time.h>
+#include<iostream>
+#include<fstream>
+#include<cmath>
+#include<sstream>
+#include<iterator>
+
+#endif
+
 using namespace std;
 
-Kruskal::Graph* Kruskal::createGraph(int v, int e) {
+class Edge {
+public:
+    int source, dest, weight;
+    Edge() {
+      source = 0;
+      dest = 0;
+      weight = 0;
+    }
+    Edge(int s, int d, int w) {
+      source = s;
+      dest = d;
+      weight = w;
+    }
+};
+
+class Graph {
+public:
+    // v - number of vertices | e - number of edges
+    int v, e;
+    Edge* edge;
+};
+
+class subset
+{
+public:
+    int parent;
+    int rank;
+};
+
+Graph* createGraph(int v, int e) {
     Graph* graph = new Graph;
     graph->v = v;
     graph->e = e;
@@ -12,14 +57,14 @@ Kruskal::Graph* Kruskal::createGraph(int v, int e) {
 }
 
 
-int Kruskal::find(subset subsets[], int i) {
+int find(subset subsets[], int i) {
     if (subsets[i].parent != i)
         subsets[i].parent = find(subsets, subsets[i].parent);
 
     return subsets[i].parent;
 }
 
-void Kruskal::Union(subset subsets[], int x, int y) {
+void Union(subset subsets[], int x, int y) {
     int rootx = find(subsets, x);
     int rooty = find(subsets, y);
 
@@ -33,7 +78,13 @@ void Kruskal::Union(subset subsets[], int x, int y) {
     }
 }
 
-void Kruskal::KruskalMST(Graph* graph) {
+int comp(const void* a, const void* b) {
+    Edge* a1 = (Edge*)a;
+    Edge* b1 = (Edge*)b;
+    return a1->weight > b1->weight;
+}
+
+int KruskalMST(Graph* graph) {
     int v = graph->v;
     Edge result[v];
     int e = 0,
@@ -59,8 +110,30 @@ void Kruskal::KruskalMST(Graph* graph) {
             Union(subsets, x, y);
         }
     }
-    cout << "edges in constructed MST\n";
+    int total = 0;
     for (int i = 0; i < e; i++)
-        cout << result[i].source << " -- " << result[i].dest << " == " << result[i].weight << endl;
-    return;
+      total += result[i].weight;
+    return total;
+}
+
+class Point {
+public:
+  int pos, x, y;
+  vector<Edge> edges;
+  Point(int position, int xv, int yv) {
+    pos = position;
+    x = xv;
+    y = yv;
+  }
+} ;
+
+int comptoorigin(Point pt1, Point pt2) {
+  return pt1.x + pt1.y > pt2.x + pt2.y;
+}
+
+float distance(int x1, int y1, int x2, int y2)
+{
+    // Calculating distance
+    return sqrt(pow(x2 - x1, 2) +
+                pow(y2 - y1, 2) * 1.0);
 }
