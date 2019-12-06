@@ -1,4 +1,17 @@
-#include <bits/stdc++.h>
+#ifndef INCLUDE
+#define INCLUDE
+
+#include<vector>
+#include<string>
+#include<algorithm>
+#include<stdlib.h>
+#include<time.h>
+#include<iostream>
+#include<fstream>
+#include<cmath>
+
+#endif
+
 using namespace std;
 
 class Edge {
