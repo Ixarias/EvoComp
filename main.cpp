@@ -44,7 +44,7 @@ int main(int argc, char* argv[]) {
 	// Variables
 	vector< vector<float> > edgeLength;
 	vector<Point> nodes;
-	vector<int> clusterList;
+	vector< vector<int> > clusterList;
 	vector<Chromosome> chromosomes;
 	vector<Chromosome> chromosomes_next;
 	/*int bestfit = 99999;
@@ -81,6 +81,7 @@ int main(int argc, char* argv[]) {
 
 	// Generate clusterList
 
+	
 
 	// Start New Population
 

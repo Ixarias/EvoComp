@@ -1,7 +1,7 @@
 #include "Chromosome.h"
 #include "Kruskal.h"
 
-Chromosome::Chromosome(vector< vector<float> > edgeLength, vector<int> clusterList) {
+Chromosome::Chromosome(vector< vector<float> > edgeLength, vector< vector<int> > clusterList) {
 	chr = generateChr(edgeLength, clusterList);
 	// fit = evaluateFit(edgeLength);
 }
@@ -11,8 +11,8 @@ Chromosome::Chromosome(vector<int> chromo, vector< vector<float> > edgeLength) {
 	// fit = evaluateFit(edgeLength);
 }
 
-vector<int> Chromosome::generateChr(vector< vector<float> > edgeLength, vector<int> clusterList) {
-	vector<int> chromo;
+vector<int> Chromosome::generateChr(vector< vector<float> > edgeLength, vector< vector<int> > clusterList) {
+	vector<int> chromo;/*
 	int prevend = 0;
 	for (unsigned int i = 0; i < clusterList.size(); i++) {
 			int start = 0 + prevend;
@@ -21,7 +21,7 @@ vector<int> Chromosome::generateChr(vector< vector<float> > edgeLength, vector<i
 			chromo.push_back(node);
 			prevend = end;
 	}
-	return chromo;
+	*/return chromo;
 }
 
 vector<int> Chromosome::getChr() {
@@ -38,8 +38,8 @@ int Chromosome::getFit() {
 	return fit;
 }
 
-void Chromosome::Mutate(vector< vector<float> > edgeLength, vector<int> clusterList) {
-	Chromosome newchr(edgeLength, clusterList);
+void Chromosome::Mutate(vector< vector<float> > edgeLength, vector< vector<int> > clusterList) {
+	/*Chromosome newchr(edgeLength, clusterList);
 		int prevend = 0;
 	for (unsigned int i = 0; i < clusterList.size(); i++) {
 		int start = 0 + prevend;
@@ -52,10 +52,10 @@ void Chromosome::Mutate(vector< vector<float> > edgeLength, vector<int> clusterL
 			}
 		}
 		prevend = end;
-	}
+	}*/
 }
 
-void Chromosome::Crossover(Chromosome& otherchr, vector< vector<float> > edgeLength, vector<int> clusterList) {
+void Chromosome::Crossover(Chromosome& otherchr, vector< vector<float> > edgeLength, vector< vector<int> > clusterList) {
 	vector<int> chrc = chr;
 	vector<int> otherchrc = otherchr.getChr();
 	int start = randnum(0, chr.size()) + 1;
