@@ -34,6 +34,10 @@ int randnum(int start, int end, vector<int> excep = { -1 }) {
 	return random_int;
 }
 
+bool mycomp (Edge i, Edge j) {
+	return i.weight < j.weight;
+}
+
 int main(int argc, char* argv[]) {
 	// Seed
 	srand(time(nullptr));
@@ -57,7 +61,6 @@ int main(int argc, char* argv[]) {
 
 	// Input instance
 	if (infile.is_open()) {
-		cout << "open" << endl;
 		string line;
 		vector<string> vecstr{};
 		vector<float> vecfl{};
@@ -81,39 +84,65 @@ int main(int argc, char* argv[]) {
 	}
 
 	// Generate clusterList
-
 	vector<Point> nodetmp = nodes;
 	sort(nodetmp.begin(), nodetmp.end(), comptoorigin);
 	int numclusters = ceil(nodes.size()/clustersize);
 
 	for(int i = 1; i < numclusters; i++) {
 		Point candidate = nodetmp.back();
-		qsort(candidate.edges.data(), candidate.edges.size(), sizeof(candidate.edges[0]), comp);
-		vector< vector<int> >::const_iterator row;
+		sort(candidate.edges.begin(), candidate.edges.end(), mycomp);
+		cout << "start " << i << endl;
+		/*for (int i = 0; i < candidate.edges.size(); i++) {
+			cout << candidate.edges[i].weight << endl;
+		}*/
+		vector< vector<int> >::const_iterator row = clusterList.begin();
+		cout << "before" << endl;
 		for(int j = 0; j < clustersize; j++) {
-			for (row = clusterList.begin(); row != clusterList.end(); row++) {
-	        if(!(find(row->begin(), row->end(), candidate.edges[j].dest) != row->end() ))
-	          clusterList[i].push_back(candidate.edges[j].dest);
-						for(int k = 0; k < nodetmp.size(); k++) {
-							if (nodetmp[k].pos == candidate.edges[j].dest) {
-								nodetmp.erase(nodetmp.begin()+k);
-								break;
-							}
+			do {
+				cout << "1" << endl;
+        if(!(find(row->begin(), row->end(), candidate.edges[j].dest) != row->end() )) {
+					cout << "true" << endl;
+          clusterList[i].push_back(candidate.edges[j].dest);
+					for(int k = 0; k < nodetmp.size(); k++) {
+						if (nodetmp[k].pos == candidate.edges[j].dest) {
+							nodetmp.erase(nodetmp.begin()+k);
+							break;
 						}
-	    }
+					}
+				}
+				cout << "here" << endl;
+				row++;
+			} while (row != clusterList.end());
+			cout << "out" << endl;
 		}
-		// last cluster
-		clusterList.push_back({});
-		while (nodetmp.size() != 0) {
-			clusterList[clusterList.size()].push_back(nodetmp[0].pos);
-			nodetmp.erase(nodetmp.begin());
-		}
-
-
 	}
+	// last cluster
+	cout << "out" << endl;
+	clusterList.push_back({});
+	int remainder = nodes.size() % clustersize;
+	cout << remainder << endl;
+	for (int i = 0; i < remainder; i++) {
+		clusterList[clusterList.size()-1].push_back(nodetmp[0].pos);
+		nodetmp.erase(nodetmp.begin());
+	}
+
+	/*cout << "input" << endl;
+	for (int i = 0; i < nodes.size(); i++) {
+		cout << nodes[i].pos << " " << nodes[i].x << " " << nodes[i].y << endl;
+	}*/
+	cout << "clusterList" << endl;
+	for (int i = 0; i < clusterList.size(); i++) {
+		cout << "cluster " << i << ":" << endl;
+		for (int j = 0; j < clusterList[i].size(); j++) {
+			cout << " " << clusterList[i][j];
+		}
+		cout << endl;
+	}
+
 
 	// Start New Population
 
+	cout << "Start New Pop" << endl;
 	for (unsigned int i = 0; i < POP_SIZE; i++) {
 		Chromosome chr(nodes, clusterList);
 		cout << "Chromosome" << i << ":";
@@ -124,6 +153,7 @@ int main(int argc, char* argv[]) {
 	}
 	// chromosomes = SortChr(chromosomes);
 
+	cout << "3" << endl;
 	cout << "Before:";
 	for (auto const& c : chromosomes[6].getChr())
 		cout << ' ' << c;

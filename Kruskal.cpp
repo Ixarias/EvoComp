@@ -19,13 +19,14 @@ using namespace std;
 
 class Edge {
 public:
-    int source, dest, weight;
+    int source, dest;
+    float weight;
     Edge() {
       source = 0;
       dest = 0;
       weight = 0;
     }
-    Edge(int s, int d, int w) {
+    Edge(int s, int d, float w) {
       source = s;
       dest = d;
       weight = w;
@@ -118,9 +119,10 @@ int KruskalMST(Graph* graph) {
 
 class Point {
 public:
-  int pos, x, y;
+  int pos;
+  float x, y;
   vector<Edge> edges;
-  Point(int position, int xv, int yv) {
+  Point(int position, float xv, float yv) {
     pos = position;
     x = xv;
     y = yv;
