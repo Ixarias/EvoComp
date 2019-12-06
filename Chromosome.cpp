@@ -1,5 +1,5 @@
 #include "Chromosome.h"
-#include "kruskal.cpp"
+#include "Kruskal.h"
 
 Chromosome::Chromosome(vector< vector<float> > edgeLength, vector<int> clusterList) {
 	chr = generateChr(edgeLength, clusterList);
