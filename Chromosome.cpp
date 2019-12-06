@@ -45,24 +45,20 @@ int Chromosome::getFit() {
 	return fit;
 }
 
-void Chromosome::Mutate(vector<Point> nodes, vector< vector<int> > clusterList) {
-	/*Chromosome newchr(nodes, clusterList);
-		int prevend = 0;
-	for (unsigned int i = 0; i < clusterList.size(); i++) {
-		int start = 0 + prevend;
-		int end = start + clusterList[i];
-		if (randnum(1, clusterList.size() + 1) == clusterList.size()) {
+void Chromosome::Mutate(vector< vector<int> > clusterList) {
+	Chromosome newchr(nodes, clusterList);
+	for (unsigned int i = 0; i < chr.size(); i++) {
+		if (randnum(1, chr.size() + 1) == chr.size()) {
 			int avoid = chr.at(i);
 			while (chr.at(i) == avoid) {
-				int node = randnum(start, end);
-				chr.at(i) = node;
+				int rnum = randnum(0, clusterList[i].size());
+				chr.at(i) = rnum;
 			}
 		}
-		prevend = end;
-	}*/
+	}
 }
 
-void Chromosome::Crossover(Chromosome& otherchr, vector<Point> nodes, vector< vector<int> > clusterList) {
+void Chromosome::Crossover(Chromosome& otherchr) {
 	vector<int> chrc = chr;
 	vector<int> otherchrc = otherchr.getChr();
 	int start = randnum(0, chr.size()) + 1;
