@@ -26,6 +26,11 @@ public:
     class Edge {
     public:
         int source, dest, weight;
+        Edge(int s, int d, int w) {
+          source = s;
+          dest = d;
+          weight = w;
+        }
     };
 
     class Graph {
@@ -49,8 +54,18 @@ public:
 
 class Point {
 public:
-  int x, y;
+  int pos, x, y;
+  vector<Kruskal::Edge> edges;
+  Point(int position, int xv, int yv) {
+    pos = position;
+    x = xv;
+    y = yv;
+  }
 } ;
+
+int comptoorigin(Point pt1, Point pt2) {
+  return pt1.x + pt1.y > pt2.x + pt2.y;
+}
 
 float distance(int x1, int y1, int x2, int y2)
 {

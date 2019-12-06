@@ -42,7 +42,7 @@ int main(int argc, char* argv[]) {
 	cout << fixed;
 
 	// Variables
-	vector< vector<float> > edgeLength;
+	int clustersize = stoi(argv[2]);
 	vector<Point> nodes;
 	vector< vector<int> > clusterList;
 	vector<Chromosome> chromosomes;
@@ -67,26 +67,53 @@ int main(int argc, char* argv[]) {
 			copy(istream_iterator<string>(iss),
      		istream_iterator<string>(),
      		back_inserter(vecstr));
-			nodes[i].x = stof(vecstr[1]);
-			nodes[i].y = stof(vecstr[2]);
-			for(int j = i-1; j >= 0; j--) {
-				float dist = distance(nodes[i].x, nodes[i].y, nodes[j].x, nodes[j].y);
-				vecfl.push_back(dist);
-			}
-			edgeLength.push_back(vecfl);
+			nodes.push_back(Point(stof(vecstr[0]), stof(vecstr[1]), stof(vecstr[2])));
 			i++;
+		}
+		for(int i = 0; i < nodes.size(); i++) {
+			for (int j = 0; j < nodes.size(); j++) {
+				nodes[i].edges.push_back(Kruskal::Edge(i, j, distance(nodes[i].x, nodes[i].y, nodes[j].x, nodes[j].y)));
+			}
 		}
 		infile.close();
 	}
 
 	// Generate clusterList
 
-	
+	vector<Point> nodetmp = nodes;
+	sort(nodetmp.begin(), nodetmp.end(), comptoorigin);
+	int numclusters = ceil(nodes.size()/clustersize);
+
+	for(int i = 1; i < numclusters; i++) {
+		Point candidate = nodetmp.back();
+		qsort(candidate.edges.data(), candidate.edges.size(), sizeof(candidate.edges[0]), comp);
+		vector< vector<int> >::const_iterator row;
+		for(int j = 0; j < clustersize; j++) {
+			for (row = clusterList.begin(); row != clusterList.end(); row++) {
+	        if(!(find(row->begin(), row->end(), candidate.edges[j].dest) != row->end() ))
+	          clusterList[i].push_back(candidate.edges[j].dest);
+						for(int k = 0; k < nodetmp.size(); k++) {
+							if (nodetmp[k].pos == candidate.edges[j].dest) {
+								nodetmp.erase(nodetmp.begin()+k);
+								break;
+							}
+						}
+	    }
+		}
+		// last cluster
+		clusterList.push_back({});
+		while (nodetmp.size() != 0) {
+			clusterList[clusterList.size()].push_back(nodetmp[0].pos);
+			nodetmp.erase(nodetmp.begin());
+		}
+
+
+	}
 
 	// Start New Population
 
 	for (unsigned int i = 0; i < POP_SIZE; i++) {
-		Chromosome chr(edgeLength, clusterList);
+		Chromosome chr(nodes, clusterList);
 		cout << "Chromosome" << i << ":";
 		for (auto const& c : chr.getChr())
     	cout << ' ' << c;

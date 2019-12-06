@@ -1,36 +1,31 @@
 #include "Chromosome.h"
-#include "Kruskal.h"
 
-Chromosome::Chromosome(vector< vector<float> > edgeLength, vector< vector<int> > clusterList) {
-	chr = generateChr(edgeLength, clusterList);
-	// fit = evaluateFit(edgeLength);
+Chromosome::Chromosome(vector<Point> nodes, vector< vector<int> > clusterList) {
+	chr = generateChr(nodes, clusterList);
+	// fit = evaluateFit(nodes);
 }
 
-Chromosome::Chromosome(vector<int> chromo, vector< vector<float> > edgeLength) {
+Chromosome::Chromosome(vector<int> chromo, vector<Point> nodes) {
 	chr = chromo;
-	// fit = evaluateFit(edgeLength);
+	// fit = evaluateFit(nodes);
 }
 
-vector<int> Chromosome::generateChr(vector< vector<float> > edgeLength, vector< vector<int> > clusterList) {
-	vector<int> chromo;/*
-	int prevend = 0;
-	for (unsigned int i = 0; i < clusterList.size(); i++) {
-			int start = 0 + prevend;
-			int end = start + clusterList[i];
-			int node = randnum(start, end);
-			chromo.push_back(node);
-			prevend = end;
+vector<int> Chromosome::generateChr(vector<Point> nodes, vector< vector<int> > clusterList) {
+	vector<int> chromo;
+	for(int i = 0; i < clusterList.size(); i++) {
+		int rnum = randnum(0, clusterList[i].size());
+		chromo.push_back(clusterList[i][rnum]);
 	}
-	*/return chromo;
+	return chromo;
 }
 
 vector<int> Chromosome::getChr() {
 	return chr;
 }
 
-int Chromosome::evaluateFit(vector< vector<float> > edgeLength) {
+int Chromosome::evaluateFit(vector<Point> nodes) {
 	int fitness = 0;
-
+	
 	return fitness;
 }
 
@@ -38,8 +33,8 @@ int Chromosome::getFit() {
 	return fit;
 }
 
-void Chromosome::Mutate(vector< vector<float> > edgeLength, vector< vector<int> > clusterList) {
-	/*Chromosome newchr(edgeLength, clusterList);
+void Chromosome::Mutate(vector<Point> nodes, vector< vector<int> > clusterList) {
+	/*Chromosome newchr(nodes, clusterList);
 		int prevend = 0;
 	for (unsigned int i = 0; i < clusterList.size(); i++) {
 		int start = 0 + prevend;
@@ -55,7 +50,7 @@ void Chromosome::Mutate(vector< vector<float> > edgeLength, vector< vector<int> 
 	}*/
 }
 
-void Chromosome::Crossover(Chromosome& otherchr, vector< vector<float> > edgeLength, vector< vector<int> > clusterList) {
+void Chromosome::Crossover(Chromosome& otherchr, vector<Point> nodes, vector< vector<int> > clusterList) {
 	vector<int> chrc = chr;
 	vector<int> otherchrc = otherchr.getChr();
 	int start = randnum(0, chr.size()) + 1;
