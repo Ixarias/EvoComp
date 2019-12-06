@@ -25,7 +25,19 @@ vector<int> Chromosome::getChr() {
 
 int Chromosome::evaluateFit(vector<Point> nodes) {
 	int fitness = 0;
-	
+	int total = 0;
+	int e = (chr.size()*(chr.size()-1))/2;
+	Kruskal kru;
+	Kruskal::Graph* graph = kru.createGraph(chr.size(), e);
+	for (int i = 0; i < chr.size(); i++) {
+		for (int j = 0; j < chr.size(); j++) {
+			if(j != i) {
+				graph->edge[total].source =  0;
+				graph->edge[total].dest = 0;
+				graph->edge[total].weight = 0;
+			}
+		}
+	}
 	return fitness;
 }
 
