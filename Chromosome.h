@@ -22,13 +22,13 @@ private:
 	vector<int> chr;
 	int fit;
 public:
-	Chromosome(vector< vector<int> >, vector<int>);
-	Chromosome(vector<int>, vector< vector<int> >);
-	vector<int> generateChr(vector< vector<int> >, vector<int>),
+	Chromosome(vector< vector<float> >, vector<int>);
+	Chromosome(vector<int>, vector< vector<float> >);
+	vector<int> generateChr(vector< vector<float> >, vector<int>),
 		getChr();
-	void Crossover(Chromosome&, vector< vector<int> >, vector<int>),
-		Mutate(vector< vector<int> >, vector<int>);
-	int evaluateFit(vector< vector<int> >),
+	void Crossover(Chromosome&, vector< vector<float> >, vector<int>),
+		Mutate(vector< vector<float> >, vector<int>);
+	int evaluateFit(vector< vector<float> >),
 		getFit(),
 		randnum(int, int, vector<int> = { -1 });
 	bool operator< (Chromosome);

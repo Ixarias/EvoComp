@@ -31,50 +31,55 @@ int randnum(int start, int end, vector<int> excep = { -1 }) {
 	return random_int;
 }
 
-int main() {
+int main(int argc, char* argv[]) {
 	// Seed
 	srand(time(nullptr));
 
 	// Variables
-	vector< vector<int> > edgeLength;
-	vector<int> clusterSizes;
+	vector< vector<float> > edgeLength;
+	vector<Point> nodes;
+	vector<int> clusterList;
 	vector<Chromosome> chromosomes;
 	vector<Chromosome> chromosomes_next;
 	/*int bestfit = 99999;
 	int stalemate = 0;
 	int gennum = 0;*/
 
-	std::fstream infile("edgelengths.txt", ios_base::in);
-	std::fstream infile2("clustersizes.txt", ios_base::in);
+	std::fstream infile(argv[1], ios_base::in);
 
-	// Input File #1
+
+	// Input instancew
 	if (infile.is_open()) {
 		string line;
-		vector<int> TempVec;
+		vector<string> vecstr{};
+		vector<float> vecfl{};
+		int i = 0;
 		while (std::getline(infile, line)) {
-			TempVec.clear();
-			for (unsigned int i = 0; i < line.length(); i++) {
-				TempVec.push_back(line[i] - '0');
+			vecstr.clear();
+			vecfl.clear();
+			istringstream iss(line);
+			copy(istream_iterator<string>(iss),
+     		istream_iterator<string>(),
+     		back_inserter(vecstr));
+			nodes[i].x = stof(vecstr[1]);
+			nodes[i].y = stof(vecstr[2]);
+			for(int j = i-1; j >= 0; j--) {
+				float dist = distance(nodes[i].x, nodes[i].y, nodes[j].x, nodes[j].y);
+				vecfl.push_back(dist);
 			}
-			edgeLength.push_back(TempVec);
+			edgeLength.push_back(vecfl);
+			i++;
 		}
 		infile.close();
 	}
 
-	// Input File #2
-	if (infile2.is_open()) {
-		string line;
-		getline(infile2, line);
-		for (unsigned int i = 0; i < line.length(); i++) {
-			clusterSizes.push_back(line[i] - '0');
-		}
-		infile.close();
-	}
+	// Generate clusterList
+
 
 	// Start New Population
 
 	for (unsigned int i = 0; i < POP_SIZE; i++) {
-		Chromosome chr(edgeLength, clusterSizes);
+		Chromosome chr(edgeLength, clusterList);
 		cout << "Chromosome" << i << ":";
 		for (auto const& c : chr.getChr())
     	cout << ' ' << c;
@@ -87,7 +92,7 @@ int main() {
 	for (auto const& c : chromosomes[6].getChr())
 		cout << ' ' << c;
 	cout << endl;
-	chromosomes[6].Mutate(edgeLength, clusterSizes);
+	chromosomes[6].Mutate(edgeLength, clusterList);
 	cout << "After:";
 	for (auto const& c : chromosomes[6].getChr())
 		cout << ' ' << c;
@@ -101,7 +106,7 @@ int main() {
 	for (auto const& c : chromosomes[3].getChr())
 		cout << ' ' << c;
 	cout << endl;
-	chromosomes[9].Crossover(chromosomes[3], edgeLength, clusterSizes);
+	chromosomes[9].Crossover(chromosomes[3], edgeLength, clusterList);
 	cout << "After - 9:";
 	for (auto const& c : chromosomes[9].getChr())
 		cout << ' ' << c;

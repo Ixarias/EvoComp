@@ -1,22 +1,22 @@
 #include "Chromosome.h"
 #include "kruskal.cpp"
 
-Chromosome::Chromosome(vector< vector<int> > edgeLength, vector<int> clusterSizes) {
-	chr = generateChr(edgeLength, clusterSizes);
+Chromosome::Chromosome(vector< vector<float> > edgeLength, vector<int> clusterList) {
+	chr = generateChr(edgeLength, clusterList);
 	// fit = evaluateFit(edgeLength);
 }
 
-Chromosome::Chromosome(vector<int> chromo, vector< vector<int> > edgeLength) {
+Chromosome::Chromosome(vector<int> chromo, vector< vector<float> > edgeLength) {
 	chr = chromo;
 	// fit = evaluateFit(edgeLength);
 }
 
-vector<int> Chromosome::generateChr(vector< vector<int> > edgeLength, vector<int> clusterSizes) {
+vector<int> Chromosome::generateChr(vector< vector<float> > edgeLength, vector<int> clusterList) {
 	vector<int> chromo;
 	int prevend = 0;
-	for (unsigned int i = 0; i < clusterSizes.size(); i++) {
+	for (unsigned int i = 0; i < clusterList.size(); i++) {
 			int start = 0 + prevend;
-			int end = start + clusterSizes[i];
+			int end = start + clusterList[i];
 			int node = randnum(start, end);
 			chromo.push_back(node);
 			prevend = end;
@@ -28,7 +28,7 @@ vector<int> Chromosome::getChr() {
 	return chr;
 }
 
-int Chromosome::evaluateFit(vector< vector<int> > edgeLength) {
+int Chromosome::evaluateFit(vector< vector<float> > edgeLength) {
 	int fitness = 0;
 
 	return fitness;
@@ -38,13 +38,13 @@ int Chromosome::getFit() {
 	return fit;
 }
 
-void Chromosome::Mutate(vector< vector<int> > edgeLength, vector<int> clusterSizes) {
-	Chromosome newchr(edgeLength, clusterSizes);
+void Chromosome::Mutate(vector< vector<float> > edgeLength, vector<int> clusterList) {
+	Chromosome newchr(edgeLength, clusterList);
 		int prevend = 0;
-	for (unsigned int i = 0; i < clusterSizes.size(); i++) {
+	for (unsigned int i = 0; i < clusterList.size(); i++) {
 		int start = 0 + prevend;
-		int end = start + clusterSizes[i];
-		if (randnum(1, clusterSizes.size() + 1) == clusterSizes.size()) {
+		int end = start + clusterList[i];
+		if (randnum(1, clusterList.size() + 1) == clusterList.size()) {
 			int avoid = chr.at(i);
 			while (chr.at(i) == avoid) {
 				int node = randnum(start, end);
@@ -55,7 +55,7 @@ void Chromosome::Mutate(vector< vector<int> > edgeLength, vector<int> clusterSiz
 	}
 }
 
-void Chromosome::Crossover(Chromosome& otherchr, vector< vector<int> > edgeLength, vector<int> clusterSizes) {
+void Chromosome::Crossover(Chromosome& otherchr, vector< vector<float> > edgeLength, vector<int> clusterList) {
 	vector<int> chrc = chr;
 	vector<int> otherchrc = otherchr.getChr();
 	int start = randnum(0, chr.size()) + 1;
