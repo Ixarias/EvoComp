@@ -1,51 +1,16 @@
-#ifndef INCLUDE
-#define INCLUDE
+#include "Kruskal.h"
 
-#include<vector>
-#include<string>
-#include<algorithm>
-#include<stdio.h>
-#include<stdlib.h>
-#include<time.h>
-#include<iostream>
-#include<fstream>
-#include<cmath>
-#include<sstream>
-#include<iterator>
-
-#endif
-
-using namespace std;
-
-class Edge {
-public:
-    int source, dest;
-    float weight;
-    Edge() {
+Edge::Edge() {
       source = 0;
       dest = 0;
       weight = 0;
     }
-    Edge(int s, int d, float w) {
+
+Edge::Edge(int s, int d, float w) {
       source = s;
       dest = d;
       weight = w;
-    }
-};
-
-class Graph {
-public:
-    // v - number of vertices | e - number of edges
-    int v, e;
-    Edge* edge;
-};
-
-class subset
-{
-public:
-    int parent;
-    int rank;
-};
+}
 
 Graph* createGraph(int v, int e) {
     Graph* graph = new Graph;
@@ -117,17 +82,11 @@ int KruskalMST(Graph* graph) {
     return total;
 }
 
-class Point {
-public:
-  int pos;
-  float x, y;
-  vector<Edge> edges;
-  Point(int position, float xv, float yv) {
+Point::Point(int position, float xv, float yv) {
     pos = position;
     x = xv;
     y = yv;
-  }
-} ;
+}
 
 int comptoorigin(Point pt1, Point pt2) {
   return pt1.x + pt1.y > pt2.x + pt2.y;

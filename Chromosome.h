@@ -18,7 +18,8 @@
 #ifndef CHROMOSOME_H
 #define CHROMOSOME_H
 
-#include "Kruskal.cpp"
+#include "Kruskal.h"
+
 using namespace std;
 
 class Chromosome {

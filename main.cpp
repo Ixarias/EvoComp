@@ -15,7 +15,8 @@
 
 #endif
 
-#include "Chromosome.cpp"
+#include "Chromosome.h"
+#include "Kruskal.h"
 using namespace std;
 
 #define POP_SIZE 10 //change later dickhead
@@ -87,6 +88,8 @@ int main(int argc, char* argv[]) {
 	vector<Point> nodetmp = nodes;
 	sort(nodetmp.begin(), nodetmp.end(), comptoorigin);
 	int numclusters = ceil(nodes.size()/clustersize);
+	vector<int> newCol;
+	clusterList.push_back(newCol);
 
 	for(int i = 1; i < numclusters; i++) {
 		Point candidate = nodetmp.back();
@@ -94,16 +97,16 @@ int main(int argc, char* argv[]) {
 		vector< vector<int> >::const_iterator row = clusterList.begin();
 		for(int j = 0; j < clustersize; j++) {
 			do {
-        if(!(find(row->begin(), row->end(), candidate.edges[j].dest) != row->end() )) {
-          clusterList[i].push_back(candidate.edges[j].dest);
-					for(int k = 0; k < nodetmp.size(); k++) {
-						if (nodetmp[k].pos == candidate.edges[j].dest) {
-							nodetmp.erase(nodetmp.begin()+k);
-							break;
+				if(!(find(row->begin(), row->end(), candidate.edges[j].dest) != row->end() )) {
+					clusterList[i].push_back(candidate.edges[j].dest);
+							for(int k = 0; k < nodetmp.size(); k++) {
+								if (nodetmp[k].pos == candidate.edges[j].dest) {
+									nodetmp.erase(nodetmp.begin()+k);
+									break;
+								}
+							}
 						}
-					}
-				}
-				row++;
+						row++;
 			} while (row != clusterList.end());
 		}
 	}
@@ -128,6 +131,7 @@ int main(int argc, char* argv[]) {
 		cout << endl;
 	}
 
+	/*
 	// Loop Population until Completion
 
 	while (stalemate != 50) {
@@ -180,6 +184,7 @@ int main(int argc, char* argv[]) {
 
 	// Output results
 	cout << bestfit << endl;
+	*/
 
 	return 0;
 }
