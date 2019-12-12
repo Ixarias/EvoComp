@@ -91,7 +91,7 @@ int main(int argc, char* argv[]) {
 	vector<int> newCol;
 	clusterList.push_back(newCol);
 
-	for(int i = 1; i < numclusters; i++) {
+	for(int i = 0; i < numclusters; i++) {
 		Point candidate = nodetmp.back();
 		sort(candidate.edges.begin(), candidate.edges.end(), edgecomp);
 		vector< vector<int> >::const_iterator row = clusterList.begin();
