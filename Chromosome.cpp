@@ -5,9 +5,9 @@ Chromosome::Chromosome(vector<Point> nodes, vector< vector<int> > clusterList) {
 	fit = evaluateFit(nodes, clusterList);
 }
 
-Chromosome::Chromosome(vector<int> chromo, vector<Point> nodes) {
+Chromosome::Chromosome(vector<int> chromo, vector<Point> nodes, vector< vector<int> > clusterList) {
 	chr = chromo;
-	// fit = evaluateFit(nodes);
+	fit = evaluateFit(nodes, clusterList);
 }
 
 Chromosome::Chromosome(const Chromosome* chromo) {

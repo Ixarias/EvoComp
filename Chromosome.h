@@ -28,7 +28,7 @@ private:
 	int fit;
 public:
 	Chromosome(vector<Point>, vector< vector<int> >);
-	Chromosome(vector<int>, vector<Point>);
+	Chromosome(vector<int>, vector<Point>, vector< vector<int> >);
 	Chromosome(const Chromosome*);
 	vector<int> generateChr(vector<Point>, vector< vector<int> >),
 		getChr();
