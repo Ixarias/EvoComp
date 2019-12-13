@@ -1,7 +1,0 @@
-﻿  Chromosome.cpp
-C:\Users\Victor\Documents\GitHub\EvoComp3\Chromosome.cpp(21,19): warning C4018: '<': signed/unsigned mismatch
-C:\Users\Victor\Documents\GitHub\EvoComp3\Chromosome.cpp(36,20): warning C4018: '<': signed/unsigned mismatch
-C:\Users\Victor\Documents\GitHub\EvoComp3\Chromosome.cpp(37,23): warning C4018: '<': signed/unsigned mismatch
-C:\Users\Victor\Documents\GitHub\EvoComp3\Chromosome.cpp(80,19): warning C4018: '<': signed/unsigned mismatch
-C:\Users\Victor\Documents\GitHub\EvoComp3\Chromosome.cpp(85,20): warning C4018: '<': signed/unsigned mismatch
-  EvoComp3.vcxproj -> C:\Users\Victor\Documents\GitHub\EvoComp3\Debug\EvoComp3.exe
