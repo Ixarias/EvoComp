@@ -61,8 +61,8 @@ int KruskalMST(Graph* graph) {
     subset* subsets = new subset[(v * sizeof(subset))];
 
     for (int ve = 0; ve < v; ++ve) {
-        subsets[v].parent = v;
-        subsets[v].rank = 0;
+        subsets[ve].parent = ve;
+        subsets[ve].rank = 0;
     }
 
     while (e < v - 1 && i < graph->e) {

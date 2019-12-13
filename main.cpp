@@ -19,7 +19,7 @@
 #include "Kruskal.h"
 using namespace std;
 
-#define POP_SIZE 10 //change later dickhead
+#define POP_SIZE 100 //change later dickhead
 
 vector<Chromosome> SortChr(vector<Chromosome> chromosomes) {
 	std::sort(chromosomes.begin(), chromosomes.end());
@@ -33,6 +33,16 @@ int randnum(int start, int end, vector<int> excep = { -1 }) {
 		random_int = randnum(start, end, excep);
 	}
 	return random_int;
+}
+
+bool check(const vector<vector<int>>& v, int item) {
+	vector< vector<int> >::const_iterator row;
+	for (row = v.begin(); row != v.end(); row++) {
+		if (find(row->begin(), row->end(), item) != row->end())
+			return true;
+	}
+
+	return false;
 }
 
 bool edgecomp (Edge i, Edge j) {
@@ -78,7 +88,7 @@ int main(int argc, char* argv[]) {
 		}
 		for(int i = 0; i < nodes.size(); i++) {
 			for (int j = 0; j < nodes.size(); j++) {
-				nodes[i].edges.push_back(Edge(i, j, distance(nodes[i].x, nodes[i].y, nodes[j].x, nodes[j].y)));
+				nodes[i].edges.push_back(Edge(i+1, j+1, distance(nodes[i].x, nodes[i].y, nodes[j].x, nodes[j].y)));
 			}
 		}
 		infile.close();
@@ -88,26 +98,26 @@ int main(int argc, char* argv[]) {
 	vector<Point> nodetmp = nodes;
 	sort(nodetmp.begin(), nodetmp.end(), comptoorigin);
 	int numclusters = ceil(nodes.size()/clustersize);
+	cout << numclusters << endl;
 	vector<int> newCol;
-	clusterList.push_back(newCol);
+	for (int i = 0; i < numclusters; i++)
+		clusterList.push_back(newCol);
 
 	for(int i = 0; i < numclusters; i++) {
 		Point candidate = nodetmp.back();
 		sort(candidate.edges.begin(), candidate.edges.end(), edgecomp);
-		vector< vector<int> >::const_iterator row = clusterList.begin();
-		for(int j = 0; j < clustersize; j++) {
-			do {
-				if(!(find(row->begin(), row->end(), candidate.edges[j].dest) != row->end() )) {
+		int clustercandidates = clustersize;
+		for(int j = 0; j < clustercandidates; j++) {
+			if(!check(clusterList, candidate.edges[j].dest)) {
 					clusterList[i].push_back(candidate.edges[j].dest);
-							for(int k = 0; k < nodetmp.size(); k++) {
-								if (nodetmp[k].pos == candidate.edges[j].dest) {
-									nodetmp.erase(nodetmp.begin()+k);
-									break;
-								}
+						for(int k = 0; k < nodetmp.size(); k++) {
+							if (nodetmp[k].pos == candidate.edges[j].dest) {
+								nodetmp.erase(nodetmp.begin()+k);
+								break;
 							}
 						}
-						row++;
-			} while (row != clusterList.end());
+			}
+			else { clustercandidates++; }
 		}
 	}
 	// last cluster
@@ -128,20 +138,22 @@ int main(int argc, char* argv[]) {
 		for (auto const& c : chr.getChr())
     	cout << ' ' << c;
 		chromosomes.push_back(chr);
-		cout << endl;
+		cout << " " << chr.getFit() << endl;
 	}
 
-	/*
+	chromosomes = SortChr(chromosomes);
+
 	// Loop Population until Completion
 
 	while (stalemate != 50) {
 		gennum++;
+		cout << "Current Generation: " << gennum << endl;
 		// Elitism
-		for (unsigned int i = 0; i < (POP_SIZE * .05); i++) {
+		for (unsigned int i = 0; i < (POP_SIZE * .02); i++) {
 			chromosomes_next.push_back(chromosomes[i]);
 		}
 		// Crossover
-		for (unsigned int i = 0; i < (POP_SIZE * .95); i++) {
+		for (unsigned int i = 0; i < (POP_SIZE * .98); i++) {
 			vector<Chromosome> temppopulation = chromosomes;
 			int rnum = randnum(0, POP_SIZE);
 			Chromosome Chromosome1 = temppopulation[rnum];
@@ -161,12 +173,12 @@ int main(int argc, char* argv[]) {
 			if (Chromosome4 < Chromosome2) {
 				Chromosome2 = Chromosome4;
 			}
-			Chromosome1.Crossover(Chromosome2);
+			Chromosome1.Crossover(Chromosome2, nodes, clusterList);
 			// Chance for Mutation
 			if (randnum(0, POP_SIZE) < (POP_SIZE * .4)) {
-				(Chromosome1.Mutate(clusterList));
+				(Chromosome1.Mutate(nodes, clusterList));
 			}
-			chromosomes_next.push_back(Chromosome3);
+			chromosomes_next.push_back(Chromosome1);
 		}
 		// Make next population current population and sort
 		chromosomes = chromosomes_next;
@@ -184,7 +196,6 @@ int main(int argc, char* argv[]) {
 
 	// Output results
 	cout << bestfit << endl;
-	*/
 
 	return 0;
 }

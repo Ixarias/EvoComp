@@ -32,8 +32,8 @@ public:
 	Chromosome(const Chromosome*);
 	vector<int> generateChr(vector<Point>, vector< vector<int> >),
 		getChr();
-	void Crossover(Chromosome&),
-		Mutate(vector< vector<int> >);
+	void Crossover(Chromosome&, vector<Point>, vector< vector<int> >),
+		Mutate(vector<Point>, vector< vector<int> >);
 	int evaluateFit(vector<Point>, vector< vector<int> >),
 		getFit(),
 		randnum(int, int, vector<int> = { -1 });

@@ -104,6 +104,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Chromosome.h" />
+    <ClInclude Include="Kruskal.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
